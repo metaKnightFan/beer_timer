@@ -3,178 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сколько до пива? 🍺 Обратный отсчет</title>
-
-    <!-- Tailwind CSS CDN -->
+    <title>Сколько до пива? 🍺 — Главный Калькулятор Счастья</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Canvas Confetti CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Google Fonts: Rubik & Inter -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,600;0,800;1,700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&family=Russo+One&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        amber: {
-                            400: '#FFD54F',
-                            500: '#FFB800',
-                            600: '#FFA000',
-                            700: '#D47A00',
-                        },
-                        charcoal: {
-                            900: '#111113',
-                            800: '#1A1A1E',
-                            700: '#26262B',
-                        },
-                        foam: '#FFF9E6'
+                        beer: {
+                            50: '#fffde7',
+                            100: '#fff9c4',
+                            300: '#ffd54f',
+                            400: '#ffca28',
+                            500: '#ffb300',
+                            600: '#ff8f00',
+                            700: '#ff6f00',
+                            800: '#e65100',
+                            dark: '#0a0a0a',
+                            card: '#141416',
+                            border: '#2a2a30'
+                        }
                     },
                     fontFamily: {
-                        rubik: ['Rubik', 'sans-serif'],
-                        sans: ['Inter', 'sans-serif']
+                        russo: ['"Russo One"', 'sans-serif'],
+                        montserrat: ['"Montserrat"', 'sans-serif'],
+                        caveat: ['"Caveat"', 'cursive']
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* Custom Glowing & Visual Effects */
         body {
-            background-color: #111113;
-            color: #FFFFFF;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 50% 20%, rgba(255, 184, 0, 0.08) 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, rgba(255, 160, 0, 0.05) 0%, transparent 50%);
-            min-height: 100vh;
+            background-color: #0a0a0c;
+            color: #f3f4f6;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            user-select: none;
         }
 
-        .amber-glow {
-            box-shadow: 0 0 25px rgba(255, 184, 0, 0.25), inset 0 0 15px rgba(255, 184, 0, 0.1);
+        /* Gold Neon Glow Utilities */
+        .neon-gold-glow {
+            box-shadow: 0 0 20px rgba(255, 179, 0, 0.35), 0 0 40px rgba(255, 143, 0, 0.2);
         }
 
-        .amber-glow-lg {
-            box-shadow: 0 0 45px rgba(255, 184, 0, 0.4);
+        .neon-gold-border {
+            border: 2px solid #ffb300;
+            box-shadow: inset 0 0 12px rgba(255, 179, 0, 0.3), 0 0 20px rgba(255, 179, 0, 0.4);
         }
 
-        .text-amber-glow {
-            text-shadow: 0 0 18px rgba(255, 184, 0, 0.6);
+        .text-glow-gold {
+            text-shadow: 0 0 10px rgba(255, 179, 0, 0.7), 0 0 20px rgba(255, 143, 0, 0.5);
         }
 
-        .text-foam-glow {
-            text-shadow: 0 0 12px rgba(255, 249, 230, 0.8);
+        .text-glow-white {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-        /* Glassmorphism Card Style */
-        .glass-card {
-            background: rgba(26, 26, 30, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 184, 0, 0.18);
+        /* Pulse Animation for main button */
+        @keyframes goldenPulse {
+            0% { box-shadow: 0 0 15px rgba(255, 179, 0, 0.5); transform: scale(1); }
+            50% { box-shadow: 0 0 35px rgba(255, 179, 0, 0.9); transform: scale(1.02); }
+            100% { box-shadow: 0 0 15px rgba(255, 179, 0, 0.5); transform: scale(1); }
         }
 
-        /* Animated Beer Glass Component */
-        .glass-container {
-            width: 130px;
-            height: 220px;
-            border: 5px solid rgba(255, 255, 255, 0.35);
-            border-top: 3px solid rgba(255, 255, 255, 0.15);
-            border-bottom-left-radius: 28px;
-            border-bottom-right-radius: 28px;
-            position: relative;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(4px);
-            overflow: hidden;
-            box-shadow: 
-                0 15px 35px rgba(0,0,0,0.6), 
-                inset 0 0 15px rgba(255,255,255,0.15),
-                0 0 20px rgba(255, 184, 0, 0.15);
+        .btn-pulse {
+            animation: goldenPulse 2s infinite ease-in-out;
         }
 
-        .beer-liquid {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, #FFD54F 0%, #FFB800 40%, #D47A00 100%);
-            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Foam Head Layer */
-        .foam-head {
-            position: absolute;
-            top: -14px;
-            left: -5%;
-            width: 110%;
-            height: 22px;
-            background: #FFF9E6;
-            border-radius: 12px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.25), inset 0 -2px 4px rgba(230, 210, 150, 0.5);
-            transition: opacity 0.3s ease;
-        }
-
-        .foam-head::before, .foam-head::after {
-            content: '';
-            position: absolute;
-            background: #FFF9E6;
-            border-radius: 50%;
-        }
-
-        .foam-head::before {
-            width: 28px;
-            height: 20px;
-            top: -8px;
-            left: 15px;
-        }
-
-        .foam-head::after {
-            width: 32px;
-            height: 22px;
-            top: -10px;
-            right: 20px;
-        }
-
-        /* CO2 Bubbles Animation */
-        .bubble {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            animation: rise 3s infinite ease-in;
-            bottom: 0;
-        }
-
-        @keyframes rise {
+        /* Bubble upward movement */
+        @keyframes floatBubble {
             0% {
-                transform: translateY(0) scale(0.6);
+                transform: translateY(0) scale(0.8);
                 opacity: 0;
             }
             20% {
                 opacity: 0.8;
             }
+            80% {
+                opacity: 0.8;
+            }
             100% {
-                transform: translateY(-190px) scale(1.2);
+                transform: translateY(-260px) scale(1.2);
                 opacity: 0;
             }
         }
 
-        /* Pulse & Bounce Keyframes */
-        @keyframes subtle-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatBubble infinite linear;
         }
 
-        .pulse-gentle {
-            animation: subtle-pulse 3s infinite ease-in-out;
+        /* Screen Shake effect on 100% */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-6px, -6px) rotate(-1deg); }
+            30% { transform: translate(6px, 4px) rotate(1deg); }
+            50% { transform: translate(-4px, 6px) rotate(-1deg); }
+            70% { transform: translate(6px, -4px) rotate(1deg); }
+            90% { transform: translate(-2px, 2px) rotate(0deg); }
+        }
+
+        .shake-screen {
+            animation: shake 0.5s ease-in-out infinite;
         }
 
         /* Custom Scrollbar */
@@ -182,523 +124,745 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #111113;
+            background: #0a0a0c;
         }
         ::-webkit-scrollbar-thumb {
-            background: #26262B;
+            background: #ffb300;
             border-radius: 4px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #FFB800;
+
+        /* Floating Beer Rain Canvas */
+        #beerRainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass-container {
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8));
+        }
+
+        /* Interactive foam wobble */
+        @keyframes foamWobble {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-3px) scaleY(1.05); }
+        }
+
+        .foam-animated {
+            animation: foamWobble 2.5s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between items-center p-4 md:p-8 selection:bg-amber-500 selection:text-charcoal-900">
+<body class="min-h-screen flex flex-col justify-between relative text-gray-100 selection:bg-beer-500 selection:text-black">
 
-    <!-- Header -->
-    <header class="w-full max-w-4xl text-center my-4">
-        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-card border-amber-500/30 mb-4 animate-bounce">
-            <span class="flex h-3 w-3 relative">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-            </span>
-            <span class="text-xs md:text-sm font-semibold uppercase tracking-wider text-amber-400">Пятничный таймер готов</span>
-        </div>
-        <h1 class="text-4xl md:text-6xl font-extrabold font-rubik tracking-tight text-white flex items-center justify-center gap-3">
-            Сколько до пива? <span class="text-amber-500 text-5xl md:text-7xl">🍺</span>
-        </h1>
-        <p class="text-gray-400 text-sm md:text-base mt-2 max-w-lg mx-auto">
-            Официальный обратный отсчет до идеального глотка пенного. Выбирай время и следи за наполнением бокала!
-        </p>
-    </header>
+    <!-- Background Beer Rain Canvas -->
+    <canvas id="beerRainCanvas"></canvas>
 
-    <!-- Main Content Area -->
-    <main class="w-full max-w-4xl my-auto py-4 flex flex-col gap-8">
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-5xl mx-auto px-4 py-6 w-full flex-grow flex flex-col justify-between">
 
-        <!-- Banner when Celebration Mode active -->
-        <div id="celebrationBanner" class="hidden w-full glass-card bg-gradient-to-r from-amber-600/30 via-amber-500/20 to-amber-600/30 border-amber-400 rounded-3xl p-6 md:p-8 text-center amber-glow-lg transition-all duration-500">
-            <div class="text-6xl md:text-8xl my-2 animate-bounce">🍻</div>
-            <h2 class="text-3xl md:text-5xl font-black font-rubik text-amber-400 text-amber-glow uppercase tracking-wider mb-2">
-                ВРЕМЯ ПИВА!
-            </h2>
-            <p class="text-foam text-lg md:text-xl font-medium mb-6">
-                Таймер истек! Рабочие дела подождут, пора наливать холодное пенное!
+        <!-- HEADER SECTION -->
+        <header class="text-center mb-6">
+            <div class="inline-block bg-beer-600/20 border border-beer-500/40 rounded-full px-4 py-1 mb-3 backdrop-blur-md">
+                <span class="text-beer-400 text-xs sm:text-sm font-bold tracking-widest uppercase">🍺 Официальный калькулятор жажды 🍺</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-russo text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-beer-500 to-amber-600 text-glow-gold tracking-wide">
+                СКОЛЬКО ДО ПИВА?
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-base mt-2 font-medium font-caveat text-xl sm:text-2xl text-yellow-100/80">
+                «Пиво — это доказательство того, что Бог любит нас и хочет, чтобы мы были счастливы»
             </p>
-            <button id="cheersBtn" onclick="triggerCheers()" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-charcoal-900 font-extrabold font-rubik text-xl rounded-2xl shadow-lg hover:shadow-amber-500/50 transform hover:-translate-y-1 transition active:translate-y-0 flex items-center justify-center gap-3 mx-auto">
-                <i class="fa-solid font-black fa-glass-water"></i> ЧОКНУТЬСЯ БОКАЛАМИ!
-            </button>
-        </div>
+        </header>
 
-        <!-- Main Timer & Visualizer Section -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <!-- HIGH-VISIBILITY TIMER CONTROL FRAME -->
+        <section class="mb-8 relative">
+            <div class="bg-gradient-to-b from-beer-card to-black p-5 sm:p-7 rounded-3xl border-2 border-beer-500/80 neon-gold-glow relative overflow-hidden backdrop-blur-md">
+                <!-- Glowing corner accents -->
+                <div class="absolute -top-10 -left-10 w-32 h-32 bg-beer-500/20 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-beer-600/20 rounded-full blur-2xl"></div>
 
-            <!-- Timer Digit Display (8 cols on desktop) -->
-            <div class="md:col-span-8 flex flex-col gap-6">
-                <div class="grid grid-cols-4 gap-2 md:gap-4 text-center">
-                    
-                    <!-- Days -->
-                    <div class="glass-card rounded-2xl p-3 md:p-5 flex flex-col items-center justify-center border-amber-500/20 hover:border-amber-500/50 transition">
-                        <span id="days" class="text-3xl md:text-6xl font-black font-rubik text-amber-400 text-amber-glow">00</span>
-                        <span class="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">Дней</span>
+                <div class="relative z-10 flex flex-col gap-5">
+
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-beer-border/80 pb-5">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">⏰</span>
+                            <div>
+                                <h2 class="text-xl sm:text-2xl font-russo text-beer-300">Установка времени старта</h2>
+                                <p class="text-xs text-gray-400">Укажите, когда вы планируете налить бокал</p>
+                            </div>
+                        </div>
+
+                        <!-- DateTime Local Input -->
+                        <div class="w-full md:w-auto">
+                            <input type="datetime-local" id="targetDatetime" 
+                                class="w-full md:w-auto bg-black/80 text-beer-300 font-russo px-4 py-3 rounded-xl border-2 border-beer-500/60 focus:border-beer-400 focus:outline-none focus:ring-2 focus:ring-beer-400/50 text-center sm:text-left text-lg shadow-inner cursor-pointer">
+                        </div>
                     </div>
 
-                    <!-- Hours -->
-                    <div class="glass-card rounded-2xl p-3 md:p-5 flex flex-col items-center justify-center border-amber-500/20 hover:border-amber-500/50 transition">
-                        <span id="hours" class="text-3xl md:text-6xl font-black font-rubik text-amber-400 text-amber-glow">00</span>
-                        <span class="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">Часов</span>
-                    </div>
-
-                    <!-- Minutes -->
-                    <div class="glass-card rounded-2xl p-3 md:p-5 flex flex-col items-center justify-center border-amber-500/20 hover:border-amber-500/50 transition">
-                        <span id="minutes" class="text-3xl md:text-6xl font-black font-rubik text-amber-400 text-amber-glow">00</span>
-                        <span class="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">Минут</span>
-                    </div>
-
-                    <!-- Seconds -->
-                    <div class="glass-card rounded-2xl p-3 md:p-5 flex flex-col items-center justify-center border-amber-500/20 hover:border-amber-500/50 transition relative overflow-hidden">
-                        <span id="seconds" class="text-3xl md:text-6xl font-black font-rubik text-amber-400 text-amber-glow">00</span>
-                        <span class="text-[10px] md:text-xs font-semibold text-gray-400 uppercase tracking-widest mt-1">Секунд</span>
-                    </div>
-
-                </div>
-
-                <!-- Humorous Status Quote Card -->
-                <div class="glass-card rounded-2xl p-5 border-amber-500/30 flex items-start gap-4">
-                    <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 text-2xl flex-shrink-0">
-                        <i class="fa-solid fa-quote-left"></i>
-                    </div>
+                    <!-- Meme Presets Row -->
                     <div>
-                        <div class="text-xs uppercase font-bold text-amber-500/80 tracking-wider mb-1">Статус подготовки:</div>
-                        <p id="beerQuote" class="text-gray-200 text-sm md:text-base italic font-medium leading-relaxed">
-                            "Загрузка пивных мудростей..."
-                        </p>
+                        <span class="text-xs font-bold uppercase tracking-wider text-beer-400/80 mb-2 block">Мемные пресеты:</span>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                            <button onclick="setPreset('emergency')" class="px-3 py-2.5 bg-beer-border/60 hover:bg-beer-600/30 border border-beer-500/30 hover:border-beer-400 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 active:scale-95 text-yellow-200">
+                                <span>⚡</span> Экстренное (5м)
+                            </button>
+                            <button onclick="setPreset('workday')" class="px-3 py-2.5 bg-beer-border/60 hover:bg-beer-600/30 border border-beer-500/30 hover:border-beer-400 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 active:scale-95 text-yellow-200">
+                                <span>💼</span> Конец смены (17:00)
+                            </button>
+                            <button onclick="setPreset('friday')" class="px-3 py-2.5 bg-beer-border/60 hover:bg-beer-600/30 border border-beer-500/30 hover:border-beer-400 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 active:scale-95 text-yellow-200">
+                                <span>🎉</span> Пятница (18:00)
+                            </button>
+                            <button onclick="setPreset('saturday')" class="px-3 py-2.5 bg-beer-border/60 hover:bg-beer-600/30 border border-beer-500/30 hover:border-beer-400 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-1.5 active:scale-95 text-yellow-200">
+                                <span>🌅</span> Суббота (12:00)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Add Minute Buttons & Action Launch Button -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-1">
+                        <div class="flex items-center gap-2 w-full sm:w-auto justify-center">
+                            <span class="text-xs font-semibold text-gray-400">Быстро:</span>
+                            <button onclick="addMinutes(15)" class="px-3 py-1.5 bg-beer-900/40 border border-beer-500/40 hover:bg-beer-500 hover:text-black rounded-lg text-xs font-bold transition">+15м</button>
+                            <button onclick="addMinutes(30)" class="px-3 py-1.5 bg-beer-900/40 border border-beer-500/40 hover:bg-beer-500 hover:text-black rounded-lg text-xs font-bold transition">+30м</button>
+                            <button onclick="addMinutes(60)" class="px-3 py-1.5 bg-beer-900/40 border border-beer-500/40 hover:bg-beer-500 hover:text-black rounded-lg text-xs font-bold transition">+1 ч</button>
+                        </div>
+
+                        <button id="startBtn" onclick="startTimer()" 
+                            class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-beer-500 via-yellow-400 to-beer-600 text-black font-russo text-lg sm:text-xl rounded-2xl shadow-xl hover:brightness-110 active:scale-95 transition btn-pulse flex items-center justify-center gap-3 border-2 border-yellow-200">
+                            <span>ЗАПУСТИТЬ ТАЙМЕР ПИВА!</span> 🍺
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN DISPLAY GRID: COUNTDOWN & BEER MUG -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8">
+
+            <!-- LEFT COLUMN: COUNTDOWN & STATUS (7 COLS) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+
+                <!-- Neon Countdown Display -->
+                <div class="bg-beer-card/90 border border-beer-border rounded-3xl p-6 relative overflow-hidden backdrop-blur-md text-center shadow-2xl">
+                    <div class="text-xs font-bold uppercase tracking-widest text-beer-400/80 mb-3">Осталось подождать до глотка:</div>
+
+                    <!-- Digits Grid -->
+                    <div class="grid grid-cols-4 gap-2 sm:gap-4 my-2">
+                        <div class="bg-black/80 rounded-2xl p-2 sm:p-4 border border-beer-500/30">
+                            <div id="daysDigit" class="text-3xl sm:text-5xl font-russo text-beer-300 text-glow-gold">00</div>
+                            <div class="text-[10px] sm:text-xs text-gray-400 uppercase mt-1">Дней</div>
+                        </div>
+                        <div class="bg-black/80 rounded-2xl p-2 sm:p-4 border border-beer-500/30">
+                            <div id="hoursDigit" class="text-3xl sm:text-5xl font-russo text-beer-300 text-glow-gold">00</div>
+                            <div class="text-[10px] sm:text-xs text-gray-400 uppercase mt-1">Часов</div>
+                        </div>
+                        <div class="bg-black/80 rounded-2xl p-2 sm:p-4 border border-beer-500/30">
+                            <div id="minutesDigit" class="text-3xl sm:text-5xl font-russo text-beer-300 text-glow-gold">00</div>
+                            <div class="text-[10px] sm:text-xs text-gray-400 uppercase mt-1">Минут</div>
+                        </div>
+                        <div class="bg-black/80 rounded-2xl p-2 sm:p-4 border border-beer-500/30">
+                            <div id="secondsDigit" class="text-3xl sm:text-5xl font-russo text-yellow-400 text-glow-gold">00</div>
+                            <div class="text-[10px] sm:text-xs text-gray-400 uppercase mt-1">Секунд</div>
+                        </div>
+                    </div>
+
+                    <!-- Milliseconds bar / fill speed indicator -->
+                    <div class="mt-4 flex items-center justify-between text-xs text-gray-400 px-2 bg-black/40 py-2 rounded-xl border border-beer-border/50">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span>Скорость наполнения:</span>
+                            <span id="fillSpeedText" class="text-beer-300 font-mono font-bold">+0.00% / сек</span>
+                        </div>
+                        <div id="msDigit" class="font-mono text-beer-400 font-bold">.00</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Visual Beer Glass Gauge (4 cols on desktop) -->
-            <div class="md:col-span-4 flex flex-col items-center justify-center glass-card rounded-3xl p-6 border-amber-500/20 relative">
-                <div class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-glass-half-full text-amber-400"></i> Градусник ожидания
-                </div>
-
-                <!-- Glass Element -->
-                <div class="glass-container">
-                    <div id="beerLiquid" class="beer-liquid" style="height: 15%;">
-                        <div id="foamHead" class="foam-head"></div>
-                        <!-- CO2 Bubbles rendered dynamically via JS -->
-                        <div id="bubblesContainer"></div>
+                <!-- Dynamic Meme Status Card -->
+                <div class="bg-gradient-to-r from-beer-card via-black to-beer-card border border-beer-500/50 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                    <div class="flex items-start gap-4">
+                        <div id="statusEmoji" class="text-4xl sm:text-5xl animate-bounce">🌵</div>
+                        <div class="flex-grow">
+                            <div class="text-xs uppercase tracking-wider text-beer-400 font-bold mb-1">Статус трезвости:</div>
+                            <p id="statusQuote" class="text-base sm:text-lg font-bold text-gray-100 font-montserrat leading-snug">
+                                Святая трезвость! Горло суше Сахары 🌵
+                            </p>
+                            <div class="w-full bg-gray-800 h-2 rounded-full mt-3 overflow-hidden border border-gray-700">
+                                <div id="statusProgressBar" class="bg-gradient-to-r from-amber-600 via-beer-500 to-yellow-300 h-full w-0 transition-all duration-300"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Fill Percentage Badge -->
-                <div class="mt-4 px-3 py-1 rounded-full bg-charcoal-900/80 border border-amber-500/30 text-amber-400 text-xs font-bold font-rubik flex items-center gap-1.5">
-                    <span>Готовность:</span>
-                    <span id="fillPercent" class="text-white">0%</span>
+                <!-- Meme Quote Sound Board ("Пятничная Пятёрка") -->
+                <div class="bg-beer-card/80 border border-beer-border rounded-2xl p-4">
+                    <div class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center justify-between">
+                        <span>🔊 Пятничная Пятерка (Звуковые эффекты)</span>
+                        <span class="text-[10px] text-beer-400">Нажми для кайфа</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="playMemeSound('pop')" class="py-2 px-3 bg-black/60 hover:bg-beer-600/30 border border-beer-500/30 rounded-xl text-xs font-bold text-yellow-300 hover:scale-105 active:scale-95 transition flex items-center justify-center gap-1.5">
+                            🍾 Чпок!
+                        </button>
+                        <button onclick="playMemeSound('pour')" class="py-2 px-3 bg-black/60 hover:bg-beer-600/30 border border-beer-500/30 rounded-xl text-xs font-bold text-yellow-300 hover:scale-105 active:scale-95 transition flex items-center justify-center gap-1.5">
+                            🍺 Пссссшш!
+                        </button>
+                        <button onclick="playMemeSound('clink')" class="py-2 px-3 bg-black/60 hover:bg-beer-600/30 border border-beer-500/30 rounded-xl text-xs font-bold text-yellow-300 hover:scale-105 active:scale-95 transition flex items-center justify-center gap-1.5">
+                            🥂 За Здоровье!
+                        </button>
+                    </div>
                 </div>
+
             </div>
 
-        </div>
-
-        <!-- Controls & Presets Panel -->
-        <div class="glass-card rounded-3xl p-6 md:p-8 border-amber-500/20 flex flex-col gap-6">
-            
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-gray-800 pb-5">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-clock text-amber-500"></i> Выбор времени начала отдыха:
-                </h3>
-
-                <!-- Custom DateTime Input -->
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <input type="datetime-local" id="targetDatetime" class="bg-charcoal-900 text-amber-400 border border-amber-500/30 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-amber-500 transition w-full sm:w-auto">
-                    <button onclick="setCustomTime()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-charcoal-900 font-bold rounded-xl text-sm transition shadow-md active:scale-95 flex-shrink-0">
-                        ОК
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Presets -->
-            <div>
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">Быстрые пресеты:</span>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <!-- RIGHT COLUMN: DYNAMIC CUSTOM SVG BEER GLASS (5 COLS) -->
+            <div class="lg:col-span-5 flex flex-col items-center justify-center">
+                
+                <div class="relative glass-container w-full max-w-[300px] flex flex-col items-center">
                     
-                    <button onclick="setPreset('friday')" class="glass-card hover:bg-amber-500/10 border-gray-800 hover:border-amber-500/50 p-3 rounded-xl text-left transition flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-charcoal-900 transition">
-                            <i class="fa-solid fa-calendar-day text-sm"></i>
+                    <!-- Exact Percentage Badge -->
+                    <div class="mb-3 bg-black/90 border-2 border-beer-400 rounded-2xl px-6 py-2 shadow-2xl backdrop-blur-md text-center cursor-pointer hover:scale-105 transition" onclick="playMemeSound('clink')">
+                        <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Заполнение бокала:</div>
+                        <div id="percentageText" class="text-3xl sm:text-4xl font-russo text-beer-300 text-glow-gold">
+                            0.00%
                         </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Пятница 18:00</div>
-                            <div class="text-[10px] text-gray-400">Классика</div>
-                        </div>
-                    </button>
+                    </div>
 
-                    <button onclick="setPreset('today18')" class="glass-card hover:bg-amber-500/10 border-gray-800 hover:border-amber-500/50 p-3 rounded-xl text-left transition flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-charcoal-900 transition">
-                            <i class="fa-solid fa-beer-mug-empty text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Сегодня 18:00</div>
-                            <div class="text-[10px] text-gray-400">Конец смены</div>
-                        </div>
-                    </button>
+                    <!-- SVG Mug Interactive Visualizer -->
+                    <div class="relative w-[240px] h-[340px] cursor-pointer" id="beerMugWrapper" onclick="handleGlassClick(event)">
+                        
+                        <!-- Floating Bubbles Container Inside Liquid -->
+                        <div id="bubblesContainer" class="absolute left-[35px] bottom-[30px] w-[150px] h-[250px] overflow-hidden pointer-events-none z-20"></div>
 
-                    <button onclick="setPreset('1hour')" class="glass-card hover:bg-amber-500/10 border-gray-800 hover:border-amber-500/50 p-3 rounded-xl text-left transition flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-charcoal-900 transition">
-                            <i class="fa-solid fa-hourglass-half text-sm"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Через 1 час</div>
-                            <div class="text-[10px] text-gray-400">Экспресс</div>
-                        </div>
-                    </button>
+                        <svg width="240" height="340" viewBox="0 0 240 340" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                            <defs>
+                                <!-- Liquid Gradient -->
+                                <linearGradient id="beerLiquidGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#d97706" />
+                                    <stop offset="35%" stop-color="#f59e0b" />
+                                    <stop offset="70%" stop-color="#fbbf24" />
+                                    <stop offset="100%" stop-color="#b45309" />
+                                </linearGradient>
 
-                    <button onclick="setPreset('30min')" class="glass-card hover:bg-amber-500/10 border-gray-800 hover:border-amber-500/50 p-3 rounded-xl text-left transition flex items-center gap-3 group">
-                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-charcoal-900 transition">
-                            <i class="fa-solid fa-bolt text-sm"></i>
+                                <!-- Glass Reflection Gradient -->
+                                <linearGradient id="glassGlare" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="white" stop-opacity="0.4" />
+                                    <stop offset="20%" stop-color="white" stop-opacity="0.1" />
+                                    <stop offset="90%" stop-color="white" stop-opacity="0.0" />
+                                    <stop offset="100%" stop-color="white" stop-opacity="0.3" />
+                                </linearGradient>
+
+                                <!-- Foam Gradient -->
+                                <linearGradient id="foamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#ffffff" />
+                                    <stop offset="85%" stop-color="#fff8e1" />
+                                    <stop offset="100%" stop-color="#fef08a" />
+                                </linearGradient>
+
+                                <!-- Mug Clip Path for Liquid -->
+                                <clipPath id="mugInnerClip">
+                                    <path d="M 45,35 L 185,35 L 175,305 C 175,315 165,320 150,320 L 80,320 C 65,320 55,315 55,305 Z" />
+                                </clipPath>
+                            </defs>
+
+                            <!-- MUG HANDLE (Behind Glass) -->
+                            <path d="M 180,80 C 235,80 240,230 176,245" fill="none" stroke="#e5e7eb" stroke-opacity="0.3" stroke-width="22" stroke-linecap="round"/>
+                            <path d="M 180,80 C 235,80 240,230 176,245" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-width="14" stroke-linecap="round"/>
+
+                            <!-- LIQUID CONTENT AREA (CLIPPED) -->
+                            <g clip-path="url(#mugInnerClip)">
+                                <!-- Dark Empty Glass Background inside -->
+                                <rect x="30" y="30" width="170" height="290" fill="#18181b" />
+
+                                <!-- DYNAMIC BEER LIQUID RECTANGLE -->
+                                <!-- Base y range from 320 (0%) down to 40 (100%) -->
+                                <rect id="beerLiquidRect" x="30" y="320" width="170" height="290" fill="url(#beerLiquidGrad)"/>
+
+                                <!-- Animated Wave & Foam Layer Header -->
+                                <g id="liquidWaveGroup" transform="translate(0, 320)">
+                                    <!-- Wave Path -->
+                                    <path id="wavePath" d="M 30,0 Q 70,-8 110,0 T 190,0 L 190,20 L 30,20 Z" fill="#f59e0b" />
+                                    
+                                    <!-- Thick Creamy Foam Layer -->
+                                    <g id="foamLayer" class="foam-animated">
+                                        <path d="M 30,0 
+                                                 C 45,-18 60,-18 75,-2 
+                                                 C 90,-22 110,-20 125,-4 
+                                                 C 140,-22 160,-18 175,-2 
+                                                 C 185,-12 195,0 190,10 
+                                                 L 30,10 Z" fill="url(#foamGrad)"/>
+                                        <!-- Foam Bubbles Detail -->
+                                        <circle cx="55" cy="-8" r="7" fill="#ffffff" />
+                                        <circle cx="95" cy="-12" r="9" fill="#ffffff" />
+                                        <circle cx="140" cy="-10" r="8" fill="#ffffff" />
+                                    </g>
+                                </g>
+                            </g>
+
+                            <!-- GLASS MUG OUTER OUTLINE & RIBS -->
+                            <path d="M 40,30 L 190,30 L 178,310 C 178,322 165,326 150,326 L 80,326 C 65,326 52,322 52,310 Z" 
+                                  fill="url(#glassGlare)" stroke="#ffffff" stroke-opacity="0.4" stroke-width="4"/>
+
+                            <!-- Mug Glass Vertical Cuts/Facets Highlights -->
+                            <line x1="75" y1="45" x2="72" y2="305" stroke="#ffffff" stroke-opacity="0.2" stroke-width="3"/>
+                            <line x1="115" y1="45" x2="115" y2="305" stroke="#ffffff" stroke-opacity="0.15" stroke-width="3"/>
+                            <line x1="155" y1="45" x2="158" y2="305" stroke="#ffffff" stroke-opacity="0.2" stroke-width="3"/>
+
+                            <!-- Top Glass Rim Highlight -->
+                            <ellipse cx="115" cy="30" rx="75" ry="6" fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3"/>
+
+                            <!-- Condensation Water Drops on Glass Exterior -->
+                            <circle cx="65" cy="120" r="2" fill="#ffffff" opacity="0.6"/>
+                            <circle cx="68" cy="125" r="1.5" fill="#ffffff" opacity="0.4"/>
+                            <circle cx="160" cy="180" r="2.5" fill="#ffffff" opacity="0.7"/>
+                            <circle cx="145" cy="220" r="2" fill="#ffffff" opacity="0.5"/>
+                            <circle cx="80" cy="240" r="3" fill="#ffffff" opacity="0.6"/>
+                        </svg>
+
+                        <!-- Toast Hint on Hover -->
+                        <div class="text-[11px] text-gray-400 text-center mt-2 font-semibold">
+                            💡 Кликни по бокалу для чоканья!
                         </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Через 30 мин</div>
-                            <div class="text-[10px] text-gray-400">Срочный вызов</div>
-                        </div>
-                    </button>
+                    </div>
 
                 </div>
+
             </div>
 
         </div>
 
-    </main>
+        <!-- FOOTER & CONTROLS BAR -->
+        <footer class="border-t border-beer-border/80 pt-5 mt-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleBeerRain()" id="rainToggleBtn" class="px-3 py-1.5 bg-beer-card hover:bg-beer-border rounded-lg border border-beer-500/30 text-yellow-300 font-semibold transition flex items-center gap-2">
+                    <span>🌧️ Эффект Пивного Дождя: <strong id="rainStatus">ВКЛ</strong></span>
+                </button>
+                <button onclick="resetTimer()" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 rounded-lg border border-red-800/40 font-semibold transition">
+                    🔄 Сброс
+                </button>
+            </div>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-4xl text-center py-6 text-xs text-gray-500 border-t border-gray-800/60 mt-auto">
-        <p class="flex items-center justify-center gap-2">
-            <span>Наслаждайтесь ответственными напитками 🍺</span>
-            <span>•</span>
-            <span>Создано с любовью к пятницам</span>
-        </p>
-    </footer>
+            <div class="text-center sm:text-right text-gray-500">
+                <span>Чрезмерное ожидание пива вредит вашему настроению. 🍺</span>
+            </div>
+        </footer>
 
+    </div>
+
+    <!-- AUDIO SYNTHESIZER & JAVASCRIPT LOGIC -->
     <script>
-        /* Quotes Database categorized by time remaining */
-        const beerQuotes = {
-            far: [
-                "Пиво требует терпения. Ибо выдержка — путь к идеальному вкусу.",
-                "Хорошие вещи приходят к тем, кто умеет ждать (и охлаждать бокалы).",
-                "Пока время идет, где-то варится свежий крафт...",
-                "Совет дня: Работайте усердно, чтобы пиво казалось ещё вкуснее!",
-                "Время относительно. Но время до пива — абсолютно."
-            ],
-            medium: [
-                "Бокалы уже аккуратно занимают свои места в морозилке...",
-                "Рабочий день на финишной прямой! Ощущаете легкий аромат хмеля?",
-                "Коллеги пока не знают, но ваше настроение уже пятничное!",
-                "Еще немного усилий, и первая пенная капля станет наградой."
-            ],
-            close: [
-                "Почти у цели! Держись, пятничный воин!",
-                "Доставайте орешки и чипсы, подготовка выходит на финишную прямую!",
-                "Внимание: уровень жажды стремительно растет!",
-                "Остались считанные минуты. Главное — не забудьте открыть холодильник!"
-            ],
-            urgent: [
-                "СРОЧНО ПРОВЕРЬТЕ ХОЛОДИЛЬНИК! ЭТО НЕ УЧЕБНАЯ ТРЕВОГА!",
-                "ОТКРЫВАШКА НАГОТОВЕ! СЕКУНДНАЯ СТРЕЛКА НА ПРЕФИНИШЕ!",
-                "ПРИГОТОВИТЬСЯ К РАСШНУРОВКЕ БОКАЛОВ!"
-            ],
-            reached: [
-                "ПОРА НАЛИВАТЬ! ПРИЯТНОГО ОТДЫХА! 🍻",
-                "Дзинь! Время отдыха наступило!",
-                "Таймер обнулен! Пятничное счастье доставлено!"
-            ]
-        };
-
-        // State variables
-        let targetTimestamp = null;
-        let startTimestamp = null;
-        let timerInterval = null;
-        let hasCelebrated = false;
-
-        // Web Audio Context for synthesized sound
+        // --- GLOBAL STATE ---
+        let startTime = Date.now();
+        let targetTime = Date.now() + 3600 * 1000; // default 1 hour
+        let animationFrameId = null;
+        let isBeerRainActive = true;
         let audioCtx = null;
 
-        /* Helper: Local ISO string generator for input */
-        function toLocalISOString(date) {
-            const tzOffset = date.getTimezoneOffset() * 60000;
-            const localISOTime = (new Date(date.getTime() - tzOffset)).toISOString().slice(0, 16);
-            return localISOTime;
-        }
+        // Meme status thresholds & quotes
+        const MEME_STAGES = [
+            { threshold: 0, emoji: "🌵", quote: "Святая трезвость! Горло суше Сахары 🌵" },
+            { threshold: 15, emoji: "🧐", quote: "Изучаем пивную карту. Взгляд дергается к холодильнику 🧐" },
+            { threshold: 35, emoji: "🤤", quote: "Эквадор пробит! Слюноотделение критическое 🤤" },
+            { threshold: 55, emoji: "📞", quote: "Звоним дружбанам: 'Ну что, вы где?!' 📞🍺" },
+            { threshold: 75, emoji: "🍺", quote: "Пена подступает к горлу! Рука уже держит открывашку 🍺🔥" },
+            { threshold: 95, emoji: "🚨", quote: "ОПАСНОСТЬ: ВЗРЫВ ТРЕЗВОСТИ! СЕКУНДЫ ДО СЧАСТЬЯ! 🚨" },
+            { threshold: 100, emoji: "🎉", quote: "🎉 УРА! ПИВО НАЛИТО! ВРЕМЯ НАКАТИТЬ! 🍻🍾" }
+        ];
 
-        /* Generate Random Bubble Effects */
-        function initBubbles() {
-            const container = document.getElementById('bubblesContainer');
-            container.innerHTML = '';
-            for (let i = 0; i < 10; i++) {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                const size = Math.random() * 6 + 3;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 85 + 5}%`;
-                bubble.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
-                bubble.style.animationDelay = `${Math.random() * 2}s`;
-                container.appendChild(bubble);
+        // Web Audio Synthesizer for Zero-Dependency Sound Effects
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        /* Calculate Next Friday at 18:00 */
-        function getNextFriday18() {
-            const now = new Date();
-            const result = new Date(now);
-            const dayOfWeek = now.getDay(); // 0: Sun, 1: Mon ... 5: Fri, 6: Sat
-            
-            let daysUntilFriday = (5 - dayOfWeek + 7) % 7;
-            
-            // If today is Friday but past 18:00, jump to next Friday
-            if (daysUntilFriday === 0 && now.getHours() >= 18) {
-                daysUntilFriday = 7;
-            }
+        function playMemeSound(type) {
+            initAudio();
+            if (!audioCtx) return;
 
-            result.setDate(now.getDate() + daysUntilFriday);
-            result.setHours(18, 0, 0, 0);
-            return result;
+            const now = audioCtx.currentTime;
+
+            if (type === 'pop') {
+                // Bottle Pop sound
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+
+                gain.gain.setValueAtTime(1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.09);
+
+            } else if (type === 'clink') {
+                // Glass Clink Bell 'Tsing' sound
+                const freqs = [1800, 2400, 3200];
+                freqs.forEach(f => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now);
+
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 1.25);
+                });
+
+            } else if (type === 'pour') {
+                // Carbonated Liquid Fizz / Pour Noise
+                const bufferSize = audioCtx.sampleRate * 0.5;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(1200, now);
+                filter.Q.setValueAtTime(3, now);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.4, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                noise.start(now);
+            }
         }
 
-        /* Calculate Today at 18:00 */
-        function getToday18() {
-            const now = new Date();
-            const result = new Date(now);
-            result.setHours(18, 0, 0, 0);
-            if (now >= result) {
-                // If already past 18:00 today, set to tomorrow 18:00
-                result.setDate(result.getDate() + 1);
-            }
-            return result;
-        }
-
-        /* Save & Load state in LocalStorage */
-        function saveState(target, start) {
-            localStorage.setItem('beer_target_time', target);
-            localStorage.setItem('beer_start_time', start);
+        // Save & Load timer from LocalStorage
+        function saveState() {
+            const data = {
+                startTime: startTime,
+                targetTime: targetTime
+            };
+            localStorage.setItem('beer_timer_state', JSON.stringify(data));
         }
 
         function loadState() {
-            const savedTarget = localStorage.getItem('beer_target_time');
-            const savedStart = localStorage.getItem('beer_start_time');
-
-            if (savedTarget && !isNaN(savedTarget)) {
-                targetTimestamp = parseInt(savedTarget, 10);
-                startTimestamp = savedStart ? parseInt(savedStart, 10) : Date.now();
-            } else {
-                // Default to Next Friday 18:00
-                const defaultTarget = getNextFriday18().getTime();
-                targetTimestamp = defaultTarget;
-                startTimestamp = Date.now();
-                saveState(targetTimestamp, startTimestamp);
+            const saved = localStorage.getItem('beer_timer_state');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.targetTime && parsed.targetTime > Date.now()) {
+                        startTime = parsed.startTime || Date.now();
+                        targetTime = parsed.targetTime;
+                        return true;
+                    }
+                } catch(e) {}
             }
+            return false;
         }
 
-        /* Update Timer Display */
-        function updateTimer() {
-            const now = Date.now();
-            const diff = targetTimestamp - now;
+        // Format Date for datetime-local input
+        function formatDateForInput(date) {
+            const pad = (n) => n.toString().padStart(2, '0');
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
 
-            const daysEl = document.getElementById('days');
-            const hoursEl = document.getElementById('hours');
-            const minutesEl = document.getElementById('minutes');
-            const secondsEl = document.getElementById('seconds');
-            const beerLiquid = document.getElementById('beerLiquid');
-            const fillPercentEl = document.getElementById('fillPercent');
-            const quoteEl = document.getElementById('beerQuote');
-            const celebrationBanner = document.getElementById('celebrationBanner');
+        function setPreset(type) {
+            const now = new Date();
+            let target = new Date();
 
-            // Set input value
-            const inputEl = document.getElementById('targetDatetime');
-            if (document.activeElement !== inputEl) {
-                inputEl.value = toLocalISOString(new Date(targetTimestamp));
+            if (type === 'emergency') {
+                target = new Date(now.getTime() + 5 * 60 * 1000);
+            } else if (type === 'workday') {
+                target.setHours(17, 0, 0, 0);
+                if (target <= now) target.setDate(target.getDate() + 1);
+            } else if (type === 'friday') {
+                const day = now.getDay();
+                const diff = (5 - day + 7) % 7; // days until Friday
+                target.setDate(now.getDate() + diff);
+                target.setHours(18, 0, 0, 0);
+                if (target <= now) target.setDate(target.getDate() + 7);
+            } else if (type === 'saturday') {
+                const day = now.getDay();
+                const diff = (6 - day + 7) % 7; // days until Saturday
+                target.setDate(now.getDate() + diff);
+                target.setHours(12, 0, 0, 0);
+                if (target <= now) target.setDate(target.getDate() + 7);
             }
 
-            if (diff <= 0) {
-                // Target reached!
-                daysEl.innerText = '00';
-                hoursEl.innerText = '00';
-                minutesEl.innerText = '00';
-                secondsEl.innerText = '00';
+            document.getElementById('targetDatetime').value = formatDateForInput(target);
+            startTimer();
+        }
 
-                beerLiquid.style.height = '95%';
-                fillPercentEl.innerText = '100%';
+        function addMinutes(mins) {
+            const input = document.getElementById('targetDatetime');
+            let current = new Date(input.value || Date.now());
+            if (isNaN(current.getTime())) current = new Date();
 
-                quoteEl.innerText = beerQuotes.reached[Math.floor(Math.random() * beerQuotes.reached.length)];
-                celebrationBanner.classList.remove('hidden');
+            current = new Date(current.getTime() + mins * 60 * 1000);
+            input.value = formatDateForInput(current);
+            startTimer();
+        }
 
-                if (!hasCelebrated) {
-                    triggerConfetti();
-                    hasCelebrated = true;
-                }
+        function startTimer() {
+            const inputVal = document.getElementById('targetDatetime').value;
+            if (!inputVal) return;
+
+            const selectedDate = new Date(inputVal);
+            if (isNaN(selectedDate.getTime())) return;
+
+            if (selectedDate <= new Date()) {
+                alert('🍺 Ошибка! Время пива должно быть в будущем!');
                 return;
             }
 
-            // Normal countdown
-            celebrationBanner.classList.add('hidden');
-            hasCelebrated = false;
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / (1000 * 60)) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-
-            daysEl.innerText = String(days).padStart(2, '0');
-            hoursEl.innerText = String(hours).padStart(2, '0');
-            minutesEl.innerText = String(minutes).padStart(2, '0');
-            secondsEl.innerText = String(seconds).padStart(2, '0');
-
-            // Calculate progress percentage for glass filling
-            const totalDuration = targetTimestamp - startTimestamp;
-            let progress = 0;
-            if (totalDuration > 0) {
-                const elapsed = now - startTimestamp;
-                progress = Math.min(100, Math.max(5, Math.floor((elapsed / totalDuration) * 100)));
-            } else {
-                progress = 50;
-            }
-
-            beerLiquid.style.height = `${Math.max(12, progress * 0.9)}%`;
-            fillPercentEl.innerText = `${progress}%`;
-
-            // Select appropriate quote based on hours remaining
-            const totalHoursLeft = diff / (1000 * 60 * 60);
-            let quoteCategory = 'far';
-
-            if (totalHoursLeft <= 0.25) { // < 15 mins
-                quoteCategory = 'urgent';
-            } else if (totalHoursLeft <= 2) { // < 2 hours
-                quoteCategory = 'close';
-            } else if (totalHoursLeft <= 12) { // < 12 hours
-                quoteCategory = 'medium';
-            }
-
-            // Update quote every 15 seconds to prevent flicker
-            if (!window.currentQuoteCategory || window.currentQuoteCategory !== quoteCategory || !window.lastQuoteTime || (now - window.lastQuoteTime > 15000)) {
-                const quotesArr = beerQuotes[quoteCategory];
-                quoteEl.innerText = `"${quotesArr[Math.floor(Math.random() * quotesArr.length)]}"`;
-                window.currentQuoteCategory = quoteCategory;
-                window.lastQuoteTime = now;
-            }
+            startTime = Date.now();
+            targetTime = selectedDate.getTime();
+            saveState();
+            playMemeSound('pop');
         }
 
-        /* Preset Handler */
-        function setPreset(type) {
+        function resetTimer() {
+            localStorage.removeItem('beer_timer_state');
+            startTime = Date.now();
+            targetTime = Date.now() + 3600 * 1000;
+            document.getElementById('targetDatetime').value = formatDateForInput(new Date(targetTime));
+            saveState();
+        }
+
+        function handleGlassClick(e) {
+            playMemeSound('clink');
+            
+            // Spawn temporary click foam stars
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const star = document.createElement('div');
+            star.innerText = '🍺';
+            star.className = 'absolute text-2xl animate-ping pointer-events-none z-30';
+            star.style.left = `${x - 12}px`;
+            star.style.top = `${y - 12}px`;
+
+            e.currentTarget.appendChild(star);
+            setTimeout(() => star.remove(), 800);
+        }
+
+        let lastCelebrationTriggered = false;
+
+        function updateLoop() {
             const now = Date.now();
-            let newTarget = null;
+            const totalDuration = targetTime - startTime;
+            const elapsed = now - startTime;
 
-            if (type === 'friday') {
-                newTarget = getNextFriday18().getTime();
-            } else if (type === 'today18') {
-                newTarget = getToday18().getTime();
-            } else if (type === '1hour') {
-                newTarget = now + (60 * 60 * 1000);
-            } else if (type === '30min') {
-                newTarget = now + (30 * 60 * 1000);
+            let percentage = 0;
+            if (totalDuration > 0) {
+                percentage = (elapsed / totalDuration) * 100;
             }
 
-            if (newTarget) {
-                targetTimestamp = newTarget;
-                startTimestamp = now;
-                saveState(targetTimestamp, startTimestamp);
-                updateTimer();
+            // Clamp percentage between 0% and 100%
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+
+            const remainingMs = Math.max(0, targetTime - now);
+
+            // Update Countdown Digits
+            const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remainingMs / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((remainingMs / (1000 * 60)) % 60);
+            const seconds = Math.floor((remainingMs / 1000) % 60);
+            const ms = Math.floor((remainingMs % 1000) / 10);
+
+            document.getElementById('daysDigit').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hoursDigit').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutesDigit').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('secondsDigit').innerText = seconds.toString().padStart(2, '0');
+            document.getElementById('msDigit').innerText = '.' + ms.toString().padStart(2, '0');
+
+            // Exact Fill Percentage Text to 2 decimal places
+            document.getElementById('percentageText').innerText = `${percentage.toFixed(2)}%`;
+
+            // Dynamic fill speed in % per second
+            const fillSpeedPercentPerSec = totalDuration > 0 ? (100 / (totalDuration / 1000)) : 0;
+            document.getElementById('fillSpeedText').innerText = `+${fillSpeedPercentPerSec.toFixed(4)}% / сек`;
+
+            // Update SVG Glass Fill Level
+            // Liquid Y range inside SVG: 320px (0%) to 40px (100%)
+            const minY = 320;
+            const maxY = 40;
+            const currentY = minY - ((minY - maxY) * (percentage / 100));
+
+            const liquidRect = document.getElementById('beerLiquidRect');
+            const waveGroup = document.getElementById('liquidWaveGroup');
+
+            liquidRect.setAttribute('y', currentY);
+            liquidRect.setAttribute('height', 330 - currentY);
+            waveGroup.setAttribute('transform', `translate(0, ${currentY})`);
+
+            // Update Dynamic Wave SVG Animation
+            const wavePath = document.getElementById('wavePath');
+            const waveOffset = (now / 200) % (Math.PI * 2);
+            const waveAmp = percentage > 0 && percentage < 100 ? 5 : 0;
+            const y1 = Math.sin(waveOffset) * waveAmp;
+            const y2 = Math.cos(waveOffset) * waveAmp;
+            wavePath.setAttribute('d', `M 30,0 Q 70,${-6 + y1} 110,0 T 190,0 L 190,20 L 30,20 Z`);
+
+            // Update Meme Status Stage
+            let currentStage = MEME_STAGES[0];
+            for (let i = MEME_STAGES.length - 1; i >= 0; i--) {
+                if (percentage >= MEME_STAGES[i].threshold) {
+                    currentStage = MEME_STAGES[i];
+                    break;
+                }
             }
+
+            document.getElementById('statusEmoji').innerText = currentStage.emoji;
+            document.getElementById('statusQuote').innerText = currentStage.quote;
+            document.getElementById('statusProgressBar').style.width = `${percentage}%`;
+
+            // Check if reached 100% celebration
+            if (percentage >= 100) {
+                if (!lastCelebrationTriggered) {
+                    lastCelebrationTriggered = true;
+                    triggerCelebration();
+                }
+            } else {
+                lastCelebrationTriggered = false;
+                document.body.classList.remove('shake-screen');
+            }
+
+            animationFrameId = requestAnimationFrame(updateLoop);
         }
 
-        /* Custom Input Handler */
-        function setCustomTime() {
-            const inputEl = document.getElementById('targetDatetime');
-            if (!inputEl.value) return;
+        function triggerCelebration() {
+            playMemeSound('clink');
+            document.body.classList.add('shake-screen');
 
-            const selectedDate = new Date(inputEl.value);
-            const time = selectedDate.getTime();
-
-            if (!isNaN(time)) {
-                targetTimestamp = time;
-                startTimestamp = Date.now();
-                saveState(targetTimestamp, startTimestamp);
-                updateTimer();
-            }
-        }
-
-        /* Confetti Burst */
-        function triggerConfetti() {
+            // Launch Confetti
             if (typeof confetti === 'function') {
                 confetti({
                     particleCount: 120,
                     spread: 80,
                     origin: { y: 0.6 },
-                    colors: ['#FFB800', '#FFD54F', '#FFFFFF', '#FFA000']
+                    colors: ['#ffb300', '#ff8f00', '#ffffff', '#ffd54f']
                 });
             }
         }
 
-        /* Web Audio API Clink Sound Generator */
-        function playClinkSound() {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+        function spawnBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
 
-                // Glass resonance oscillator 1
-                const osc1 = audioCtx.createOscillator();
-                const gain1 = audioCtx.createGain();
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 6 + 3;
+                const left = Math.random() * 130;
+                const duration = Math.random() * 2 + 1.5;
 
-                osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(2400, audioCtx.currentTime); 
-                osc1.frequency.exponentialRampToValueAtTime(2200, audioCtx.currentTime + 0.8);
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${left}px`;
+                bubble.style.bottom = '0px';
+                bubble.style.animationDuration = `${duration}s`;
 
-                gain1.gain.setValueAtTime(0.6, audioCtx.currentTime);
-                gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+                container.appendChild(bubble);
 
-                osc1.connect(gain1);
-                gain1.connect(audioCtx.destination);
+                setTimeout(() => {
+                    bubble.remove();
+                }, duration * 1000);
+            }, 300);
+        }
 
-                // High overtone oscillator 2
-                const osc2 = audioCtx.createOscillator();
-                const gain2 = audioCtx.createGain();
+        // Matrix Beer Rain Background Animation
+        const rainCanvas = document.getElementById('beerRainCanvas');
+        const ctx = rainCanvas.getContext('2d');
+        let rainDrops = [];
+        const beerEmojis = ['🍺', '🍻', '🍺', '🌾', '🟡'];
 
-                osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(3600, audioCtx.currentTime);
-                osc2.frequency.exponentialRampToValueAtTime(3200, audioCtx.currentTime + 0.4);
+        function initBeerRain() {
+            rainCanvas.width = window.innerWidth;
+            rainCanvas.height = window.innerHeight;
 
-                gain2.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            const columns = Math.floor(rainCanvas.width / 35);
+            rainDrops = [];
 
-                osc2.connect(gain2);
-                gain2.connect(audioCtx.destination);
-
-                osc1.start();
-                osc2.start();
-                osc1.stop(audioCtx.currentTime + 0.8);
-                osc2.stop(audioCtx.currentTime + 0.4);
-            } catch (e) {
-                console.log('Audio playback error:', e);
+            for (let i = 0; i < columns; i++) {
+                rainDrops.push({
+                    x: i * 35,
+                    y: Math.random() * -rainCanvas.height,
+                    speed: Math.random() * 2 + 1,
+                    emoji: beerEmojis[Math.floor(Math.random() * beerEmojis.length)]
+                });
             }
         }
 
-        /* Interactive Cheers Function */
-        function triggerCheers() {
-            playClinkSound();
-            triggerConfetti();
-            const btn = document.getElementById('cheersBtn');
-            btn.classList.add('scale-105');
-            setTimeout(() => btn.classList.remove('scale-105'), 200);
+        function drawBeerRain() {
+            ctx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+
+            if (isBeerRainActive) {
+                ctx.font = '20px serif';
+                rainDrops.forEach(drop => {
+                    ctx.globalAlpha = 0.25;
+                    ctx.fillText(drop.emoji, drop.x, drop.y);
+                    drop.y += drop.speed;
+
+                    if (drop.y > rainCanvas.height) {
+                        drop.y = -30;
+                        drop.speed = Math.random() * 2 + 1;
+                    }
+                });
+            }
+
+            requestAnimationFrame(drawBeerRain);
         }
 
-        /* Initialization */
+        function toggleBeerRain() {
+            isBeerRainActive = !isBeerRainActive;
+            document.getElementById('rainStatus').innerText = isBeerRainActive ? 'ВКЛ' : 'ВЫКЛ';
+        }
+
+        window.addEventListener('resize', initBeerRain);
+
         window.onload = function() {
-            initBubbles();
-            loadState();
-            updateTimer();
-            // Start main ticking interval
-            timerInterval = setInterval(updateTimer, 1000);
+            const hasSaved = loadState();
+
+            if (!hasSaved) {
+                // Default target: 1 hour from now
+                targetTime = Date.now() + 3600 * 1000;
+                startTime = Date.now();
+                saveState();
+            }
+
+            document.getElementById('targetDatetime').value = formatDateForInput(new Date(targetTime));
+
+            spawnBubbles();
+            initBeerRain();
+            drawBeerRain();
+
+            // Start main animation loop
+            updateLoop();
         };
     </script>
 </body>
